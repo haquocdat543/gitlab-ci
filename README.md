@@ -50,6 +50,7 @@ You can use [gitlab-cli](https://gitlab.com/gitlab-org/cli) instead
 glab variable set SONAR_TOKEN <sonarqube-token>
 glab variable set SONAR_HOST_URL <sonarqube-server-url>
 ```
+### 3. Dockerhub config
 
 Navigate to Dockerhub > `Finger print in top right corner` >  `Account Settings` > `Security` > `New Access Token` > Enter name > `Generate` > Copy it
 
@@ -64,6 +65,38 @@ You can use [gitlab-cli](https://gitlab.com/gitlab-org/cli) instead
 glab varible set DOCKER_USERNAME <your-dockerhub-name>
 glab varible set DOCKER_PASSWORD <your-docker-token>
 ```
+### 4. Install Gitlab-Runner
+ssh to `Sonarqube-server` 
+```
+cd
+sh ./gitlab-runner.sh
+```
+
+Go back to gitlab `Settings` > `CI/CD` > `Runners` > `Expand` > `three dots` beside `New Project Runner` > `Show runner installation...`
+
+Below the `Command to register runner` > Copy it and run on `Sonarqube-server` 
+* 1. Enter
+* 2. Enter
+* 3. Whatever you want
+* 4. Whatever you want
+* 5. ( Optional )
+* 6. shell
+
+and then run gitlab-runner
+```
+cd
+sh ./bashlog.sh
+sudo gitlab-runner run
+```
+
+Go back to `ci` repo and make a commit to start build
+```
+git add .
+git commit -m "Add sonar-project.properties"
+git push
+```
+
+Go back to gitlab > `Build` > `Pipelines` to see result 
 
 ### 3. Destroy
 ```
