@@ -39,7 +39,7 @@ Enter your `key pair` name. If you dont have create one. [keypair](https://docs.
 
 Outputs:
 ```
-Gitlab-Server = "ssh -i ~/Window2.pem ubuntu@54.92.66.231"
+Sonarqube-Server = "ssh -i ~/Window2.pem ubuntu@54.92.66.231"
 ```
 
 ### 3. Config sonarqube server

@@ -79,7 +79,7 @@ resource "aws_security_group" "JenkinsSecurityGroup" {
   }
 }
 # Create a network interface with an ip in the subnet that was created step 4
-resource "aws_network_interface" "Gitlab-Server" {
+resource "aws_network_interface" "Sonarqube-Server" {
   subnet_id       = aws_subnet.JenkinsSubnet.id
   private_ips     = ["10.0.0.51"]
   security_groups = [aws_security_group.JenkinsSecurityGroup.id]
@@ -90,39 +90,39 @@ resource "aws_network_interface" "Gitlab-Server" {
 }
 
 # Assign an elastic IP to the network interface created in step 7
-resource "aws_eip" "Gitlab-Server" {
+resource "aws_eip" "Sonarqube-Server" {
   domain                    = "vpc"
 }
 
 # Associate EIP to EC2 instances ENI
 
-resource "aws_eip_association" "eip_assoc_to_Gitlab-Server" {
-  instance_id   = aws_instance.Gitlab-Server.id
-  allocation_id = aws_eip.Gitlab-Server.id
+resource "aws_eip_association" "eip_assoc_to_Sonarqube-Server" {
+  instance_id   = aws_instance.Sonarqube-Server.id
+  allocation_id = aws_eip.Sonarqube-Server.id
 }
 
-resource "aws_instance" "Gitlab-Server" {
+resource "aws_instance" "Sonarqube-Server" {
   ami               = var.ami_id
   instance_type     = "t3.medium"
   availability_zone = "ap-northeast-1a"
   key_name          = var.key_pair
-  user_data         = file("./scripts/gitlab.sh")
+  user_data         = file("./scripts/sonarqube.sh")
   root_block_device {
     volume_size = 15
     volume_type = "gp3"
     encrypted   = true
     tags	= {
-	    "Name" = "Gitlab-Server"
+	    "Name" = "Sonarqube-Server"
 	    "Env" = "Dev"
 	}
     }
   network_interface {
     device_index         = 0
-    network_interface_id = aws_network_interface.Gitlab-Server.id
+    network_interface_id = aws_network_interface.Sonarqube-Server.id
   }
 }
 
 #Output
-output "Gitlab-Server" {
-  value = "ssh -i ~/${var.key_pair}.pem ubuntu@${aws_eip.Gitlab-Server.public_ip}"
+output "Sonarqube-Server" {
+  value = "ssh -i ~/${var.key_pair}.pem ubuntu@${aws_eip.Sonarqube-Server.public_ip}"
 }
