@@ -20,6 +20,10 @@ cd backend
 terraform init
 terraform apply --auto-approve
 ```
+### 3. Config sonarqube server
+Copy `<your-sonarqube-server-public-ip>:9000` and open it in your browser
+Login with default username `admin` and default password `admin`
+
 ### 3. Destroy
 ```
 terraform destroy --auto-approve
