@@ -11,15 +11,37 @@ This link with two repositories :
 ## Start
 ### 1. Clone project
 ```
-git clone https://github.com/haquocdat543/devops-infra.git
-cd devops-infra
+git clone https://github.com/haquocdat543/gitlab-ci.git
+cd gitlab-ci
 ```
-### 2. Backend
+### 2. Initialize
 ```
 cd backend
 terraform init
 terraform apply --auto-approve
 ```
+```
+Initializing the backend...
+Initializing provider plugins...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/aws v5.30.0
+Terraform has been successfully initialized!
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+var.key_pair
+  Enter a value:
+```
+Enter your `key pair` name. If you dont have create one. [keypair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html)
+
+Outputs:
+```
+Gitlab-Server = "ssh -i ~/Window2.pem ubuntu@54.92.66.231"
+```
+
 ### 3. Config sonarqube server
 Copy `<your-sonarqube-server-public-ip>:9000` and open it in your browser
 
@@ -46,6 +68,14 @@ SONAR_HOST_URL <sonarqube-server-url>
 Click `Continue`
 
 You can use [gitlab-cli](https://gitlab.com/gitlab-org/cli) instead
+
+First, you need to create gitlab token . [gitlab-token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
+
+Then login with command :
+```
+glab auth login
+```
+Then `cd` to your `gitlab-repo`
 ```
 glab variable set SONAR_TOKEN <sonarqube-token>
 glab variable set SONAR_HOST_URL <sonarqube-server-url>
@@ -89,7 +119,7 @@ sh ./bashlog.sh
 sudo gitlab-runner run
 ```
 
-Go back to `ci` repo and make a commit to start build
+Go back to `gitlab-repo` repo and make a commit to start build
 ```
 git add .
 git commit -m "Add sonar-project.properties"
@@ -98,7 +128,7 @@ git push
 
 Go back to gitlab > `Build` > `Pipelines` to see result 
 
-### 3. Destroy
+### 5. Destroy
 ```
 terraform destroy --auto-approve
 ```
