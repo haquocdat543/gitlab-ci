@@ -128,6 +128,8 @@ git push
 
 Go back to gitlab > `Build` > `Pipelines` to see result 
 
+Copy `<sonarqube-server-ip>:8080` to access vue app
+
 ### 5. Destroy
 ```
 terraform destroy --auto-approve
