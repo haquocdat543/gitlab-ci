@@ -1,6 +1,8 @@
 # gitlab-ci
 This is a demonstration of using Gitlab ci
 
+This link with two repositories :
+* [gitlab-ci](https://gitlab.com/haquocdat543/ci)
 ## Prerequisites
 * [git](https://git-scm.com/downloads)
 * [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
