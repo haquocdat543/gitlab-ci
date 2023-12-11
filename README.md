@@ -118,6 +118,77 @@ cd
 sh ./bashlog.sh
 sudo gitlab-runner run
 ```
+Add file `.gitlab-ci.yml` with content
+```
+stages:
+    - npm
+    - sonar
+    - trivy file scan
+    - docker
+    - trivy image scan
+    - run container
+
+Install dependecy:
+    stage: npm    
+    image:
+        name: node:16
+    script:
+        - npm install    
+
+sonarqube-check:
+  stage: sonar
+  image: 
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script: 
+    - sonar-scanner
+  allow_failure: true
+  only:
+    - main
+
+Trivy file scan:
+  stage: trivy file scan
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: [""]
+  script:
+    - trivy fs . 
+
+Docker build and push:
+  stage: docker
+  image:
+    name: docker:latest
+  services:
+    - docker:dind   
+  script:
+    - docker build -f Dockerfile . -t haquocdat543/gitlab-v1:latest
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker push haquocdat543/gitlab-v1:latest
+
+Scan image:
+  stage: trivy image scan
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: [""]
+  script:
+    - trivy image haquocdat543/gitlab-v1:latest
+
+deploy:
+  stage: run container
+  tags:
+    - gitlab
+  script:
+    - docker run -d --name youtube -p 8080:8080 haquocdat543/gitlab-v1:latest
+
+
+```
 
 Go back to `gitlab-repo` repo and make a commit to start build
 ```
